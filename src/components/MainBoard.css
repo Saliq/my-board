@@ -1,0 +1,18 @@
+.container {
+  display: grid;
+  grid-template-columns: 10rem 10rem 10rem;
+  grid-gap: 1rem;
+  grid-auto-flow: row;
+  background-color: #ebeaea;
+  display: inline-flex;
+
+  width: auto;
+  height: auto;
+  border: 2px solid black;
+}
+
+.container>div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  font-size: 30px;
+}
