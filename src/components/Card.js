@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ItemTypes } from "../constants/ItemTypes";
 
 export const Card = (props) => {
-    const { id, data, color, boardName } = props;
+    const { id, data, color, parentBoardName } = props;
     const [voteCount, setVoteCount] = useState(0);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export const Card = (props) => {
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: ItemTypes.CARD,
-        item: { id: id, boardName: boardName },
+        item: { id: id, parentBoardName: parentBoardName },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging()
         })

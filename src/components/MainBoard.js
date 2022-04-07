@@ -1,6 +1,6 @@
 import './MainBoard.css';
 import { BoardItem } from './BoardItem';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { e_BoardItem as BoardName } from './enum';
 
 const boardItems = [{ name: BoardName.START, color: "#0080003b" }, { name: BoardName.STOP, color: "#ffb80063" }, { name: BoardName.CONTINUE, color: "#0036d54a" }]
@@ -10,18 +10,43 @@ export const MainBoard = () => {
   const [stopTasks, setStopTasks] = useState([{ id: 3, title: "Task 3", votes: 13 }]);
   const [contTasks, setContTasks] = useState([{ id: 4, title: "Task 4", votes: 111 }]);
 
-  const addCardToStartBoard = (itemId, fromBoardName, toBoardName) => {
+  const addCardToStartBoard = useCallback((itemId, fromBoardName, toBoardName) => {
     if (fromBoardName === BoardName.START) {
-      let task = startTasks.filter(x => x.id === itemId);
-      setStartTasks(startTasks.filter(x => x.id !== itemId));
-      console.log("startTasks", startTasks);
-      if (toBoardName === BoardName.STOP && task) {
-        setStopTasks([task[0], ...stopTasks]);
+      let taskToMove = startTasks.filter(x => x.id === itemId);
+      let newStartTask = startTasks.filter(x => x.id !== itemId);
+      setStartTasks(newStartTask);
+
+      if (toBoardName === BoardName.STOP && taskToMove) {
+        setStopTasks([taskToMove[0], ...stopTasks]);
       }
-      if (toBoardName === BoardName.CONTINUE && task) {
-        setContTasks([task[0], ...contTasks]);
+      if (toBoardName === BoardName.CONTINUE && taskToMove) {
+        setContTasks([taskToMove[0], ...contTasks]);
       }
     }
+  }, [contTasks, startTasks, stopTasks]);
+
+  const getTaskList = (boardName) => {
+    if (boardName === BoardName.START) {
+      return startTasks;
+    }
+    if (boardName === BoardName.STOP) {
+      return stopTasks;
+    }
+    if (boardName === BoardName.CONTINUE) {
+      return contTasks;
+    }
+    return [];
+  }
+
+  return (
+    <div className="container" >
+      {boardItems.map((list, i) => {
+        return <BoardItem key={i} id={list.name} name={list.name} color={list.color} taskList={getTaskList(list.name)} addCardToStartBoard={addCardToStartBoard} />
+      })}
+    </div>
+  );
+}
+
 /*
     if (fromBoardName === BoardName.STOP) {
       let task = stopTasks.filter(x => x.id === itemId);
@@ -46,26 +71,3 @@ export const MainBoard = () => {
         setStopTasks([task[0], ...stopTasks]);
       }
     }*/
-  };
-
-  const getTaskList = (name) => {
-    if (name === "Start") {
-      return startTasks;
-    }
-    if (name === "Stop") {
-      return stopTasks;
-    }
-    if (name === "Continue") {
-      return contTasks;
-    }
-    return [];
-  }
-
-  return (
-    <div className="container" >
-      {boardItems.map((list, i) => {
-        return <BoardItem key={i} id={list.name} name={list.name} color={list.color} taskList={getTaskList(list.name)} addCardToStartBoard={addCardToStartBoard} />
-      })}
-    </div>
-  );
-}
