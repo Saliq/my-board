@@ -1,6 +1,6 @@
 import './MainBoard.css';
 import { BoardItem } from './BoardItem';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { e_BoardItem as BoardName } from './enum';
 
 const boardItems = [{ name: BoardName.START, color: "#0080003b" }, { name: BoardName.STOP, color: "#ffb80063" }, { name: BoardName.CONTINUE, color: "#0036d54a" }]
@@ -17,13 +17,13 @@ export const MainBoard = () => {
       setStartTasks(newStartTask);
 
       if (toBoardName === BoardName.STOP && taskToMove) {
-        setStopTasks([taskToMove[0], ...stopTasks]);
+        setStopTasks(oldTasks => [...oldTasks, taskToMove[0]]);
       }
       if (toBoardName === BoardName.CONTINUE && taskToMove) {
-        setContTasks([taskToMove[0], ...contTasks]);
+        setContTasks(oldTasks => [...oldTasks, taskToMove[0]]);
       }
     }
-  }, [contTasks, startTasks, stopTasks]);
+  }, [startTasks]);
 
   const getTaskList = (boardName) => {
     if (boardName === BoardName.START) {
