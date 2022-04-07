@@ -11,7 +11,7 @@ export const MainBoard = () => {
   const [contTasks, setContTasks] = useState([{ id: 4, title: "Task 4", votes: 111 }]);
 
   const addCardToStartBoard = useCallback((itemId, fromBoardName, toBoardName) => {
-    if (fromBoardName === BoardName.START) {
+    if (fromBoardName === BoardName.START && fromBoardName !== toBoardName) {
       let taskToMove = startTasks.filter(x => x.id === itemId);
       let newStartTask = startTasks.filter(x => x.id !== itemId);
       setStartTasks(newStartTask);
