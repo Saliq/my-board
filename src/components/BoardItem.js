@@ -16,7 +16,7 @@ export const BoardItem = (props) => {
     return (
         <div className="item" style={{ opacity: isOver ? 0.5 : 1 }} ref={dropRef} >{name}
           {props.taskList.map((data, i) => {
-            return <Card key={data.id} id={data.id} parentBoardName={id} data={data} color={color} />;
+            return ( data.displayAtBoard === id && <Card key={data.id} id={data.id} parentBoardName={id} data={data} color={color} />);
           })}
         </div>
     );

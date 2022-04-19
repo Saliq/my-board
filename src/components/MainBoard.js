@@ -6,42 +6,28 @@ import { e_BoardItem as BoardName } from './enum';
 const boardItems = [{ name: BoardName.START, color: "#0080003b" }, { name: BoardName.STOP, color: "#ffb80063" }, { name: BoardName.CONTINUE, color: "#0036d54a" }]
 
 export const MainBoard = () => {
-  const [startTasks, setStartTasks] = useState([{ id: 1, title: "Task 1", votes: 8 }, { id: 2, title: "Task 2", votes: 44 }]);
-  const [stopTasks, setStopTasks] = useState([{ id: 3, title: "Task 3", votes: 13 }]);
-  const [contTasks, setContTasks] = useState([{ id: 4, title: "Task 4", votes: 111 }]);
 
-  const addCardToStartBoard = useCallback((itemId, fromBoardName, toBoardName) => {
-    if (fromBoardName === BoardName.START && fromBoardName !== toBoardName) {
-      let taskToMove = startTasks.filter(x => x.id === itemId);
-      let newStartTask = startTasks.filter(x => x.id !== itemId);
-      setStartTasks(newStartTask);
+  const [tasksList, setTasksList] = useState([
+  { id: 1, title: "Task 1", votes: 8, displayAtBoard: BoardName.START },
+  { id: 2, title: "Task 2", votes: 44, displayAtBoard: BoardName.START },
+  { id: 3, title: "Task 3", votes: 13, displayAtBoard: BoardName.STOP },
+  { id: 4, title: "Task 4", votes: 111, displayAtBoard: BoardName.CONTINUE }]);
 
-      if (toBoardName === BoardName.STOP && taskToMove) {
-        setStopTasks(oldTasks => [...oldTasks, taskToMove[0]]);
-      }
-      if (toBoardName === BoardName.CONTINUE && taskToMove) {
-        setContTasks(oldTasks => [...oldTasks, taskToMove[0]]);
-      }
-    }
-  }, [startTasks]);
+  const addCardToStartBoard = (itemId, fromBoardName, toBoardName) => {
+    console.log(itemId, " ", fromBoardName, " ", toBoardName);
 
-  const getTaskList = (boardName) => {
-    if (boardName === BoardName.START) {
-      return startTasks;
-    }
-    if (boardName === BoardName.STOP) {
-      return stopTasks;
-    }
-    if (boardName === BoardName.CONTINUE) {
-      return contTasks;
-    }
-    return [];
-  }
+      let newArr = [...tasksList];
+      const index = tasksList.findIndex(x => x.id === itemId);
+      newArr[index].displayAtBoard = toBoardName; 
+
+      setTasksList(newArr);
+      
+  };
 
   return (
     <div className="container" >
-      {boardItems.map((list, i) => {
-        return <BoardItem key={i} id={list.name} name={list.name} color={list.color} taskList={getTaskList(list.name)} addCardToStartBoard={addCardToStartBoard} />
+      {boardItems.map((board, i) => {
+        return <BoardItem key={i} id={board.name} name={board.name} color={board.color} taskList={tasksList} addCardToStartBoard={addCardToStartBoard} />
       })}
     </div>
   );
